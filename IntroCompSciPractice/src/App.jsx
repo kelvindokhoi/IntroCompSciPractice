@@ -3,6 +3,7 @@ import Sidebar from "./components/Sidebar";
 import ProblemView from "./components/ProblemView";
 import { problems } from "./data/problems";
 import "./App.css";
+import { Analytics } from "@vercel/analytics/next"
 
 export default function App() {
   const [selectedTopic, setSelectedTopic] = useState("lists");
@@ -14,6 +15,8 @@ export default function App() {
   };
 
   return (
+    <>
+    <Analytics />
     <div className="app">
       <header className="app-header">
         <div className="header-logo">
@@ -32,5 +35,6 @@ export default function App() {
         <ProblemView key={selectedProblem.id} problem={selectedProblem} />
       </div>
     </div>
+    </>
   );
 }

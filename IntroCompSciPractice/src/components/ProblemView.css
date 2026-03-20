@@ -382,3 +382,20 @@ details[open] .hint-summary {
   display: flex;
   flex-direction: column;
 }
+
+@media (max-width: 768px) {
+  .problem-view {
+    flex-direction: column;
+  }
+  .description-panel {
+    width: 100%;
+    height: 40%;
+    border-right: none;
+    border-bottom: 1px solid var(--border);
+    flex-shrink: 0;
+  }
+  .editor-panel {
+    width: 100%;
+    height: 60%;
+  }
+}

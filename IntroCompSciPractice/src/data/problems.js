@@ -126,6 +126,29 @@ export const problems = {
       hints: ["Clean the string with .replace(' ', '').lower() before checking if it equals its reverse."],
       solution: `s = input().replace(' ', '').lower()\nprint(s == s[::-1])`,
       solutionExplanation: "Clean the input first, then compare against its reversed slice."
+    },
+    {
+      id: "func-4",
+      title: "Filter Primes",
+      topic: "Functions",
+      difficulty: "hard",
+      description: "Write a function filter_primes(lst) that accepts a list of integers and returns a new list containing only the prime numbers from the input list, preserving their original order. A prime number is a positive integer greater than 1 having no divisors other than 1 and itself.",
+      starterCode: `def filter_primes(lst):\n    # Write your code here\n    pass\n\n# --- Do not modify below this line ---\nn = int(input())\nnums = []\nfor _ in range(n):\n    nums.append(int(input()))\nprint(filter_primes(nums))\n`,
+      positiveKeywords: [
+        { word: "def filter_primes(", feedback: "You must define the function filter_primes(lst)." },
+        { word: "return", feedback: "Your function must return the resulting list." }
+      ],
+      negativeKeywords: [],
+      testCases: [
+        { label: "Test 1 – mixed numbers", input: "5\n2\n4\n5\n8\n11", testInput: "5\n2\n4\n5\n8\n11\n", expected: "[2, 5, 11]", hidden: false },
+        { label: "Test 2 – no primes", input: "3\n4\n6\n8", testInput: "3\n4\n6\n8\n", expected: "[]", hidden: false },
+        { label: "Test 3 – minimum edge cases", input: "5\n-3\n0\n1\n2\n7", testInput: "5\n-3\n0\n1\n2\n7\n", expected: "[2, 7]", hidden: true },
+        { label: "Test 4 – empty list", input: "0", testInput: "0\n", expected: "[]", hidden: true }
+      ],
+      constraints: ["Numbers like 0, 1, and negative numbers are NOT prime."],
+      hints: ["Create a helper function is_prime(n) that returns True if n is prime, False otherwise.", "Iterate over the input list and append to a new list if is_prime(x) is True."],
+      solution: `def is_prime(n):\n    if n <= 1:\n        return False\n    for i in range(2, int(n**0.5) + 1):\n        if n % i == 0:\n            return False\n    return True\n\ndef filter_primes(lst):\n    result = []\n    for num in lst:\n        if is_prime(num):\n            result.append(num)\n    return result\n\n# --- Do not modify below this line ---\nn = int(input())\nnums = []\nfor _ in range(n):\n    nums.append(int(input()))\nprint(filter_primes(nums))`,
+      solutionExplanation: "A helper function checks if a number is prime by attempting division up to its square root. The main function builds a new list by iterating through the original list and keeping only the primes."
     }
   ],
   while_loop: [
@@ -280,6 +303,28 @@ export const problems = {
       hints: ["For row i (from 1 to N), print N-i spaces followed by i stars separated by a space."],
       solution: `n = int(input())\nfor i in range(1, n + 1):\n    print(" " * (n - i) + " ".join(["*"] * i))`,
       solutionExplanation: "Iterate from 1 to N. Calculate the leading spaces and join the stars with a space."
+    },
+    {
+      id: "for-6",
+      title: "Diamond Pattern",
+      topic: "For Loop",
+      difficulty: "hard",
+      description: "Read an odd integer N (where N >= 3). Use a `for` loop to print a symmetrical diamond of stars (`*`) of height N. The top and bottom rows should have 1 star, the middle row must have N stars. The stars should NOT be separated by spaces, but you will need leading spaces to center them.",
+      starterCode: `# Write your code here\n`,
+      positiveKeywords: [
+        { word: "for", feedback: "You must use at least one for loop." }
+      ],
+      negativeKeywords: [],
+      testCases: [
+        { label: "Test 1 – n=5", input: "5", testInput: "5\n", expected: "  *\n ***\n*****\n ***\n  *", hidden: false },
+        { label: "Test 2 – n=3", input: "3", testInput: "3\n", expected: " *\n***\n *", hidden: false },
+        { label: "Test 3 – n=7 (hidden)", input: "7", testInput: "7\n", expected: "   *\n  ***\n *****\n*******\n *****\n  ***\n   *", hidden: true },
+        { label: "Test 4 – n=9 (hidden)", input: "9", testInput: "9\n", expected: "    *\n   ***\n  *****\n *******\n*********\n *******\n  *****\n   ***\n    *", hidden: true }
+      ],
+      constraints: ["N will be an odd integer >= 3."],
+      hints: ["Consider calculating the distance from the middle row.", "If the middle index is mid = N // 2, the number of leading spaces for row i (0 to N-1) is abs(mid - i).", "The number of stars for row i is N - 2 * spaces."],
+      solution: `n = int(input())\nmid = n // 2\nfor i in range(n):\n    spaces = abs(mid - i)\n    stars = n - 2 * spaces\n    print(" " * spaces + "*" * stars)`,
+      solutionExplanation: "By calculating the distance of the current row from the middle using abs(), we determine how many leading spaces are needed. The number of stars is simply the total width N minus twice the leading spaces."
     }
   ]
 };

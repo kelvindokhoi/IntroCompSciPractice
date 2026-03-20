@@ -262,7 +262,7 @@ _printed = _stdout.getvalue()
                 ⚠️ Try solving it yourself first!
               </div>
               <div className="section-label">Solution</div>
-              <pre className="solution-code">{problem.solution}</pre>
+              <CopyableCode label="Python Solution" code={problem.solution} />
               {problem.solutionExplanation && (
                 <>
                   <div className="section-label">Explanation</div>

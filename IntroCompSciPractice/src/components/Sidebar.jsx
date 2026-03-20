@@ -8,7 +8,7 @@ const TOPIC_META = {
   for_loop: { label: "For Loop", icon: "↺", color: "#3fb950" },
 };
 
-export default function Sidebar({ problems, selectedProblem, onSelect }) {
+export default function Sidebar({ problems, selectedProblem, onSelect, isOpen, onClose }) {
   const [expandedTopics, setExpandedTopics] = useState(
     Object.keys(problems).reduce((acc, k) => ({ ...acc, [k]: true }), {})
   );
@@ -17,7 +17,12 @@ export default function Sidebar({ problems, selectedProblem, onSelect }) {
     setExpandedTopics((prev) => ({ ...prev, [topic]: !prev[topic] }));
 
   return (
-    <aside className="sidebar">
+    <aside className={`sidebar ${isOpen ? "open" : ""}`}>
+      <div className="sidebar-guide">
+        <span className="dot dot-easy" /> Easy&nbsp;&nbsp;
+        <span className="dot dot-medium" /> Medium&nbsp;&nbsp;
+        <span className="dot dot-hard" /> Hard
+      </div>
       <div className="sidebar-label">Topics</div>
       {Object.entries(problems).map(([topic, problemList]) => {
         const meta = TOPIC_META[topic] || { label: topic, icon: "#", color: "#8b949e" };
@@ -41,7 +46,10 @@ export default function Sidebar({ problems, selectedProblem, onSelect }) {
                     <button
                       key={problem.id}
                       className={`problem-item ${active ? "active" : ""}`}
-                      onClick={() => onSelect(topic, problem)}
+                      onClick={() => {
+                        onSelect(topic, problem);
+                        if (onClose) onClose();
+                      }}
                       style={{ "--topic-color": meta.color }}
                     >
                       <span className="problem-number">
@@ -57,11 +65,6 @@ export default function Sidebar({ problems, selectedProblem, onSelect }) {
           </div>
         );
       })}
-      <div className="sidebar-footer">
-        <span className="dot dot-easy" /> Easy&nbsp;&nbsp;
-        <span className="dot dot-medium" /> Medium&nbsp;&nbsp;
-        <span className="dot dot-hard" /> Hard
-      </div>
     </aside>
   );
 }

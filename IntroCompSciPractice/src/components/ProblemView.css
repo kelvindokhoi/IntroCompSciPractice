@@ -317,6 +317,7 @@ details[open] .hint-summary {
   flex-direction: column;
   overflow: hidden;
   background: var(--bg-deep);
+  position: relative;
 }
 
 .editor-header {

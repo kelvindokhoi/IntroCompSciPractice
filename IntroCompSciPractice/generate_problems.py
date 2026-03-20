@@ -213,6 +213,42 @@ def mk_for_5():
         tcs.append(fmt_tc(f"Test {i+1} - n={n}", n, str(n)+"\n", "\n".join(lines), h))
     return tcs
 
+def mk_func_4():
+    tcs = []
+    cases = [
+        ("mixed numbers", [2,4,5,8,11], False, [2,5,11]),
+        ("no primes", [4,6,8], False, []),
+        ("includes negatives and zero", [-3,0,1,2,7], True, [2,7]),
+        ("empty list", [], True, []),
+        ("all primes", [2,3,5,7,11], True, [2,3,5,7,11]),
+        ("large primes", [97, 100, 101], True, [97, 101]),
+        ("mostly ones and zeros", [0, 1, 1, 0, 2], True, [2]),
+        ("negatives only", [-5, -7, -11], True, []),
+        ("large range", list(range(10)), True, [2, 3, 5, 7]),
+        ("repeated primes", [3, 3, 3, 4, 3], True, [3, 3, 3, 3]),
+    ]
+    for i, (l, arr, h, exp_arr) in enumerate(cases):
+        n = len(arr)
+        inp = str(n) + ("\n" + "\n".join(map(str, arr)) if n > 0 else "")
+        exp = str(exp_arr)
+        tcs.append(fmt_tc(f"Test {i+1} - {l}", inp, inp + "\n", exp, h))
+    return tcs
+
+def mk_for_6():
+    tcs = []
+    cases = [5, 3, 7, 9, 11, 13, 15, 17, 19, 21]
+    for i, n in enumerate(cases):
+        h = i >= 2
+        lines = []
+        mid = n // 2
+        for r in range(n):
+            spaces = abs(mid - r)
+            stars = n - 2 * spaces
+            lines.append(" " * spaces + "*" * stars)
+        exp = "\n".join(lines)
+        tcs.append(fmt_tc(f"Test {i+1} - n={n}", n, str(n)+"\n", exp, h))
+    return tcs
+
 flat_problems = [
     {
       "id": "lists-1",
@@ -443,9 +479,51 @@ flat_problems = [
       "hints": ["For row i (from 1 to N), print N-i spaces followed by i stars separated by a space."],
       "solution": "n = int(input())\nfor i in range(1, n + 1):\n    print(\" \" * (n - i) + \" \".join([\"*\"] * i))",
       "solutionExplanation": "Iterate from 1 to N. Calculate the leading spaces and join the stars with a space."
+    },
+    {
+      "id": "func-4",
+      "title": "Filter Primes",
+      "topic": "Functions",
+      "difficulty": "hard",
+      "description": "Write a function filter_primes(lst) that accepts a list of integers and returns a new list containing only the prime numbers from the input list, preserving their original order. A prime number is a positive integer greater than 1 having no divisors other than 1 and itself.",
+      "starterCode": "def filter_primes(lst):\n    # Write your code here\n    pass\n\n# --- Do not modify below this line ---\nn = int(input())\nnums = []\nfor _ in range(n):\n    nums.append(int(input()))\nprint(filter_primes(nums))\n",
+      "positiveKeywords": [
+        { "word": "def filter_primes(", "feedback": "You must define the function filter_primes(lst)." },
+        { "word": "return", "feedback": "Your function must return the resulting list." }
+      ],
+      "negativeKeywords": [],
+      "testCases": mk_func_4(),
+      "constraints": ["Numbers like 0, 1, and negative numbers are NOT prime."],
+      "hints": ["Create a helper function is_prime(n) that returns True if n is prime, False otherwise.", "Iterate over the input list and append to a new list if is_prime(x) is True."],
+      "solution": "def is_prime(n):\n    if n <= 1:\n        return False\n    for i in range(2, int(n**0.5) + 1):\n        if n % i == 0:\n            return False\n    return True\n\ndef filter_primes(lst):\n    result = []\n    for num in lst:\n        if is_prime(num):\n            result.append(num)\n    return result\n\n# --- Do not modify below this line ---\nn = int(input())\nnums = []\nfor _ in range(n):\n    nums.append(int(input()))\nprint(filter_primes(nums))",
+      "solutionExplanation": "A helper function checks if a number is prime by attempting division up to its square root. The main function builds a new list by iterating through the original list and keeping only the primes."
+    },
+    {
+      "id": "for-6",
+      "title": "Diamond Pattern",
+      "topic": "For Loop",
+      "difficulty": "hard",
+      "description": "Read an odd integer N (where N >= 3). Use a `for` loop to print a symmetrical diamond of stars (`*`) of height N. The top and bottom rows should have 1 star, the middle row must have N stars. The stars should NOT be separated by spaces, but you will need leading spaces to center them.",
+      "starterCode": "# Write your code here\n",
+      "positiveKeywords": [
+        { "word": "for", "feedback": "You must use at least one for loop." }
+      ],
+      "negativeKeywords": [],
+      "testCases": mk_for_6(),
+      "constraints": ["N will be an odd integer >= 3."],
+      "hints": ["Consider calculating the distance from the middle row.", "If the middle index is mid = N // 2, the number of leading spaces for row i (0 to N-1) is abs(mid - i).", "The number of stars for row i is N - 2 * spaces."],
+      "solution": "n = int(input())\nmid = n // 2\nfor i in range(n):\n    spaces = abs(mid - i)\n    stars = n - 2 * spaces\n    print(\" \" * spaces + \"*\" * stars)",
+      "solutionExplanation": "By calculating the distance of the current row from the middle using abs(), we determine how many leading spaces are needed. The number of stars is simply the total width N minus twice the leading spaces."
     }
 ]
 
-js_content = "export const problems = " + json.dumps(flat_problems, indent=2) + ";"
+structured_problems = {
+    "lists": [p for p in flat_problems if p["topic"] == "Lists"],
+    "functions": [p for p in flat_problems if p["topic"] == "Functions"],
+    "while_loop": [p for p in flat_problems if p["topic"] == "While Loop"],
+    "for_loop": [p for p in flat_problems if p["topic"] == "For Loop"]
+}
+
+js_content = "export const problems = " + json.dumps(structured_problems, indent=2) + ";"
 with open("c:\\\\Users\\\\BTB\\\\Desktop\\\\GitHub\\\\IntroCompSciPractice\\\\IntroCompSciPractice\\\\src\\\\data\\\\problems.js", "w", encoding="utf-8") as f:
     f.write(js_content)

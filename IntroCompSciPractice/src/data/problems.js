@@ -1,4 +1,320 @@
 export const problems = {
+  "list_comprehensions": [
+    {
+      "id": "lc-1",
+      "title": "Integers inline",
+      "topic": "List Comprehensions",
+      "difficulty": "easy",
+      "description": "Read a single line containing space-separated integers. Use a list comprehension to create a list of these integers. Print the resulting list.",
+      "starterCode": "# Write your code here\n",
+      "positiveKeywords": [
+        {
+          "word": "[",
+          "feedback": "Use a list comprehension [...] to solve this."
+        },
+        {
+          "word": "for ",
+          "feedback": "A list comprehension requires a 'for' clause."
+        }
+      ],
+      "negativeKeywords": [
+        {
+          "word": "list(map(",
+          "feedback": "Use a list comprehension rather than map()."
+        }
+      ],
+      "testCases": [
+        {
+          "label": "Test 1 - basic",
+          "input": "1 2 3",
+          "testInput": "1 2 3\n",
+          "expected": "[1, 2, 3]",
+          "hidden": false
+        },
+        {
+          "label": "Test 2 - negatives",
+          "input": "10 20 -5 0",
+          "testInput": "10 20 -5 0\n",
+          "expected": "[10, 20, -5, 0]",
+          "hidden": false
+        },
+        {
+          "label": "Test 3 - single",
+          "input": "42",
+          "testInput": "42\n",
+          "expected": "[42]",
+          "hidden": true
+        },
+        {
+          "label": "Test 4 - all negatives",
+          "input": "-1 -2 -3",
+          "testInput": "-1 -2 -3\n",
+          "expected": "[-1, -2, -3]",
+          "hidden": true
+        },
+        {
+          "label": "Test 5 - zeros",
+          "input": "0 0 0",
+          "testInput": "0 0 0\n",
+          "expected": "[0, 0, 0]",
+          "hidden": true
+        },
+        {
+          "label": "Test 6 - large variation",
+          "input": "100 200 300 400 500",
+          "testInput": "100 200 300 400 500\n",
+          "expected": "[100, 200, 300, 400, 500]",
+          "hidden": true
+        },
+        {
+          "label": "Test 7 - large single",
+          "input": "999",
+          "testInput": "999\n",
+          "expected": "[999]",
+          "hidden": true
+        },
+        {
+          "label": "Test 8 - odds",
+          "input": "1 3 5 7 9",
+          "testInput": "1 3 5 7 9\n",
+          "expected": "[1, 3, 5, 7, 9]",
+          "hidden": true
+        },
+        {
+          "label": "Test 9 - evens",
+          "input": "2 4 6 8 10",
+          "testInput": "2 4 6 8 10\n",
+          "expected": "[2, 4, 6, 8, 10]",
+          "hidden": true
+        },
+        {
+          "label": "Test 10 - scattered",
+          "input": "5 -1 0 100",
+          "testInput": "5 -1 0 100\n",
+          "expected": "[5, -1, 0, 100]",
+          "hidden": true
+        }
+      ],
+      "constraints": [
+        "Must use a list comprehension."
+      ],
+      "hints": [
+        "Use input().split() to get a list of string tokens representing the numbers.",
+        "To convert a string to an integer, use int(x)."
+      ],
+      "solution": "print([int(x) for x in input().split()])",
+      "solutionExplanation": "A single list comprehension iterates over the words from input().split(), converting each to an int."
+    },
+    {
+      "id": "lc-2",
+      "title": "Floats inline",
+      "topic": "List Comprehensions",
+      "difficulty": "easy",
+      "description": "Read a single line containing space-separated float numbers. Use a list comprehension to create a list of these floats. Print the resulting list.",
+      "starterCode": "# Write your code here\n",
+      "positiveKeywords": [
+        {
+          "word": "[",
+          "feedback": "Use a list comprehension [...] to solve this."
+        },
+        {
+          "word": "for ",
+          "feedback": "A list comprehension requires a 'for' clause."
+        }
+      ],
+      "negativeKeywords": [
+        {
+          "word": "list(map(",
+          "feedback": "Use a list comprehension rather than map()."
+        }
+      ],
+      "testCases": [
+        {
+          "label": "Test 1 - basic",
+          "input": "1.5 2.5 3.5",
+          "testInput": "1.5 2.5 3.5\n",
+          "expected": "[1.5, 2.5, 3.5]",
+          "hidden": false
+        },
+        {
+          "label": "Test 2 - includes negatives",
+          "input": "-1.1 0.0 2.2",
+          "testInput": "-1.1 0.0 2.2\n",
+          "expected": "[-1.1, 0.0, 2.2]",
+          "hidden": false
+        },
+        {
+          "label": "Test 3 - single float",
+          "input": "3.14159",
+          "testInput": "3.14159\n",
+          "expected": "[3.14159]",
+          "hidden": true
+        },
+        {
+          "label": "Test 4 - whole floats",
+          "input": "10.0 20.0",
+          "testInput": "10.0 20.0\n",
+          "expected": "[10.0, 20.0]",
+          "hidden": true
+        },
+        {
+          "label": "Test 5 - zeros",
+          "input": "0.0 0.0",
+          "testInput": "0.0 0.0\n",
+          "expected": "[0.0, 0.0]",
+          "hidden": true
+        },
+        {
+          "label": "Test 6 - fractional",
+          "input": "0.5 1.5 2.5 3.5",
+          "testInput": "0.5 1.5 2.5 3.5\n",
+          "expected": "[0.5, 1.5, 2.5, 3.5]",
+          "hidden": true
+        },
+        {
+          "label": "Test 7 - negative fractions",
+          "input": "-0.5 -1.5",
+          "testInput": "-0.5 -1.5\n",
+          "expected": "[-0.5, -1.5]",
+          "hidden": true
+        },
+        {
+          "label": "Test 8 - large float",
+          "input": "100.1",
+          "testInput": "100.1\n",
+          "expected": "[100.1]",
+          "hidden": true
+        },
+        {
+          "label": "Test 9 - mixed large",
+          "input": "-100.1 100.1",
+          "testInput": "-100.1 100.1\n",
+          "expected": "[-100.1, 100.1]",
+          "hidden": true
+        },
+        {
+          "label": "Test 10 - repeated pattern",
+          "input": "1.11 2.22 3.33 4.44",
+          "testInput": "1.11 2.22 3.33 4.44\n",
+          "expected": "[1.11, 2.22, 3.33, 4.44]",
+          "hidden": true
+        }
+      ],
+      "constraints": [
+        "Must use a list comprehension."
+      ],
+      "hints": [
+        "Use input().split() and convert each string to a float using float()."
+      ],
+      "solution": "print([float(x) for x in input().split()])",
+      "solutionExplanation": "A single list comprehension over input().split(), using the float() function."
+    },
+    {
+      "id": "lc-3",
+      "title": "Word Lengths inline",
+      "topic": "List Comprehensions",
+      "difficulty": "easy",
+      "description": "Read a single line containing space-separated words. Use a list comprehension to create a list containing the length of each word. Print the resulting list.",
+      "starterCode": "# Write your code here\n",
+      "positiveKeywords": [
+        {
+          "word": "[",
+          "feedback": "Use a list comprehension [...] to solve this."
+        },
+        {
+          "word": "for ",
+          "feedback": "A list comprehension requires a 'for' clause."
+        }
+      ],
+      "negativeKeywords": [
+        {
+          "word": "list(map(",
+          "feedback": "Use a list comprehension rather than map()."
+        }
+      ],
+      "testCases": [
+        {
+          "label": "Test 1 - basic",
+          "input": "hello world",
+          "testInput": "hello world\n",
+          "expected": "[5, 5]",
+          "hidden": false
+        },
+        {
+          "label": "Test 2 - increasing",
+          "input": "a bb ccc dddd",
+          "testInput": "a bb ccc dddd\n",
+          "expected": "[1, 2, 3, 4]",
+          "hidden": false
+        },
+        {
+          "label": "Test 3 - sentence",
+          "input": "python is fun",
+          "testInput": "python is fun\n",
+          "expected": "[6, 2, 3]",
+          "hidden": true
+        },
+        {
+          "label": "Test 4 - phrase",
+          "input": "I love coding",
+          "testInput": "I love coding\n",
+          "expected": "[1, 4, 6]",
+          "hidden": true
+        },
+        {
+          "label": "Test 5 - single word",
+          "input": "one",
+          "testInput": "one\n",
+          "expected": "[3]",
+          "hidden": true
+        },
+        {
+          "label": "Test 6 - long word",
+          "input": "supercalifragilisticexpialidocious",
+          "testInput": "supercalifragilisticexpialidocious\n",
+          "expected": "[34]",
+          "hidden": true
+        },
+        {
+          "label": "Test 7 - pangram chunk",
+          "input": "the quick brown fox",
+          "testInput": "the quick brown fox\n",
+          "expected": "[3, 5, 5, 3]",
+          "hidden": true
+        },
+        {
+          "label": "Test 8 - complex words",
+          "input": "list comprehensions are powerful",
+          "testInput": "list comprehensions are powerful\n",
+          "expected": "[4, 14, 3, 8]",
+          "hidden": true
+        },
+        {
+          "label": "Test 9 - repetition",
+          "input": "a a a a a",
+          "testInput": "a a a a a\n",
+          "expected": "[1, 1, 1, 1, 1]",
+          "hidden": true
+        },
+        {
+          "label": "Test 10 - standard",
+          "input": "testing one two three",
+          "testInput": "testing one two three\n",
+          "expected": "[7, 3, 3, 5]",
+          "hidden": true
+        }
+      ],
+      "constraints": [
+        "Must use a list comprehension."
+      ],
+      "hints": [
+        "Use input().split() to get the list of words.",
+        "Use len(x) to get the length of each word."
+      ],
+      "solution": "print([len(w) for w in input().split()])",
+      "solutionExplanation": "A single list comprehension maps each token from input().split() to its len()."
+    }
+  ],
   "lists": [
     {
       "id": "lists-1",

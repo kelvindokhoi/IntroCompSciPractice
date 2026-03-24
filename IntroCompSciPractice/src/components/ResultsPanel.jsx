@@ -83,17 +83,17 @@ export default function ResultsPanel({ results, isRunning, total, onClose }) {
                     {c.input !== "hidden" && (
                       <div className="diff-block">
                         <div className="diff-label">Input</div>
-                        <pre className="diff-value input-text">{c.input}</pre>
+                        <code className="diff-value input-text">{c.input}</code>
                       </div>
                     )}
                     <div className="diff-block">
                       <div className="diff-label">Your Output</div>
-                      <pre className="diff-value actual-text">{c.actual ?? "<no output>"}</pre>
+                      <code className="diff-value actual-text">{c.actual ?? "<no output>"}</code>
                     </div>
                     {c.expected !== "hidden" && (
                       <div className="diff-block">
                         <div className="diff-label">Expected Output</div>
-                        <pre className="diff-value expected-text">{c.expected}</pre>
+                        <code className="diff-value expected-text">{c.expected}</code>
                       </div>
                     )}
                     {c.expected === "hidden" && (

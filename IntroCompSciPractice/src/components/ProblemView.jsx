@@ -33,7 +33,7 @@ const CopyableCode = ({ label, code }) => {
         </button>
       </div>
       <div className="copyable-content">
-        <pre>{code}</pre>
+        <code>{code}</code>
       </div>
     </div>
   );
@@ -164,10 +164,10 @@ _printed = _stdout.getvalue()
 
         // Get printed output
         let output = pyodide.globals.get("_printed") || "";
-        let actualRaw = output.trim();
+        let actualRaw = output;
 
-        const expected = String(tc.expected).trim();
-        const actual = String(actualRaw).trim();
+        const expected = String(tc.expected);
+        const actual = String(actualRaw);
         const passed = actual === expected;
 
         caseResults.push({

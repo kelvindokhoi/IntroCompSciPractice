@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import CodeEditor from "./CodeEditor";
 import ResultsPanel from "./ResultsPanel";
 import "./ProblemView.css";
@@ -40,12 +40,35 @@ const CopyableCode = ({ label, code }) => {
 };
 
 export default function ProblemView({ problem }) {
-  const [code, setCode] = useState(problem.starterCode);
+  const [code, setCode] = useState("");
   const [activeTab, setActiveTab] = useState("problem"); // problem | hints | solution
   const [results, setResults] = useState(null); // null | { status, cases }
   const [isRunning, setIsRunning] = useState(false);
   const pyodideRef = useRef(null);
   const pyodideLoadingRef = useRef(null);
+  const currentProblemId = useRef(null);
+
+  // Load saved code when problem changes or on initial mount
+  useEffect(() => {
+    if (currentProblemId.current !== problem.id) {
+      // Save current code before switching
+      if (currentProblemId.current && code) {
+        localStorage.setItem(`pypractice-solution-${currentProblemId.current}`, code);
+      }
+      
+      // Load saved code for new problem
+      const savedCode = localStorage.getItem(`pypractice-solution-${problem.id}`);
+      setCode(savedCode || problem.starterCode);
+      currentProblemId.current = problem.id;
+    }
+  }, [problem.id, problem.starterCode]);
+
+  // Save code to localStorage whenever it changes (but only if we have a current problem)
+  useEffect(() => {
+    if (currentProblemId.current && code) {
+      localStorage.setItem(`pypractice-solution-${currentProblemId.current}`, code);
+    }
+  }, [code]);
 
   const ensurePyodide = async () => {
     if (pyodideRef.current) return pyodideRef.current;
@@ -110,23 +133,30 @@ export default function ProblemView({ problem }) {
         
         // Capture stdout and override stdin
         const runCode = `
-import sys, io as _io
+import sys, io as _io, time as _time
 _stdout = _io.StringIO()
 _stdin = _io.StringIO(${JSON.stringify(stdinInput)})
 sys.stdout = _stdout
 sys.stdin = _stdin
+
+_start_time = _time.time()
+def _trace(frame, event, arg):
+    if _time.time() - _start_time > 1.5:
+        raise TimeoutError("Execution timed out (possible infinite loop)")
+    return _trace
+sys.settrace(_trace)
 
 _user_code = ${JSON.stringify(code)}
 
 try:
     exec(_user_code, globals())
 except Exception as _e:
+    raise _e
+finally:
+    sys.settrace(None)
     sys.stdout = sys.__stdout__
     sys.stdin = sys.__stdin__
-    raise _e
 
-sys.stdout = sys.__stdout__
-sys.stdin = sys.__stdin__
 _printed = _stdout.getvalue()
 `;
 

@@ -45,7 +45,7 @@ export default function App() {
           isOpen={sidebarOpen}
           onClose={() => setSidebarOpen(false)}
         />
-        <ProblemView key={selectedProblem.id} problem={selectedProblem} />
+        <ProblemView problem={selectedProblem} />
       </div>
     </div>
     </>

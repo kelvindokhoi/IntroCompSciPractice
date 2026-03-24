@@ -33,7 +33,7 @@ const CopyableCode = ({ label, code }) => {
         </button>
       </div>
       <div className="copyable-content">
-        <code>{code}</code>
+        <pre>{code}</pre>
       </div>
     </div>
   );

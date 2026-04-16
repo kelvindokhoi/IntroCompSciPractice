@@ -110,6 +110,11 @@
   padding: 0;
 }
 
+:root {
+  --scale: 1.5;
+  --base-size: 14px;
+}
+
 html, body, #root {
   height: 100%;
   overflow: hidden;
@@ -119,15 +124,11 @@ body {
   background: var(--bg-deep);
   color: var(--text-primary);
   font-family: var(--ui);
-  font-size: 14px;
+  font-size: calc(var(--base-size) * var(--scale));
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
 }
 
-/* 150% Browser Zoom Simulation */
-#root {
-  zoom: 1.5;
-}
 
 .app {
   display: flex;
@@ -140,8 +141,8 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 24px;
-  height: 52px;
+  padding: 0 36px;
+  height: 78px;
   background: var(--bg-surface);
   border-bottom: 1px solid var(--border);
   flex-shrink: 0;
@@ -151,23 +152,23 @@ body {
 .header-left {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 18px;
 }
 
 .header-right {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 24px;
 }
 
 .theme-select {
   background: var(--bg-surface);
   color: var(--text-primary);
   border: 1px solid var(--border);
-  padding: 4px 8px;
-  border-radius: 4px;
+  padding: 6px 12px;
+  border-radius: 6px;
   font-family: var(--ui);
-  font-size: 11.5px;
+  font-size: 17px;
   cursor: pointer;
   outline: none;
   transition: border-color 0.2s;
@@ -181,13 +182,13 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 6px 10px;
+  padding: 9px 15px;
   background: var(--bg-elevated);
   border: 1px solid var(--border);
-  border-radius: 6px;
+  border-radius: 9px;
   color: var(--text-secondary);
   font-family: var(--ui);
-  font-size: 13px;
+  font-size: 20px;
   cursor: pointer;
   transition: all 0.2s ease;
 }
@@ -204,12 +205,12 @@ body {
   border: none;
   color: var(--text-primary);
   cursor: pointer;
-  padding: 4px;
+  padding: 6px;
 }
 
 .header-logo {
   font-family: var(--display);
-  font-size: 18px;
+  font-size: 27px;
   font-weight: 800;
   letter-spacing: -0.02em;
 }
@@ -220,11 +221,11 @@ body {
 
 .logo-text {
   color: var(--text-primary);
-  margin: 0 2px;
+  margin: 0 3px;
 }
 
 .header-subtitle {
-  font-size: 11px;
+  font-size: 17px;
   color: var(--text-muted);
   letter-spacing: 0.08em;
   text-transform: uppercase;

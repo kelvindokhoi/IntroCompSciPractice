@@ -57,7 +57,7 @@ export default function ProblemView({ problem, onSolve, onPrev, onNext, hasPrev,
   const [runningCase, setRunningCase] = useState(0);
   const [failCount, setFailCount] = useState(0);
   const [showConfetti, setShowConfetti] = useState(false);
-  const [fontSize, setFontSize] = useState(() => parseInt(localStorage.getItem('pypractice-font-size')) || 13);
+  const [fontSize, setFontSize] = useState(() => parseInt(localStorage.getItem('pypractice-font-size')) || 20);
   const [errorLine, setErrorLine] = useState(null);
   const [revealedHints, setRevealedHints] = useState(0);
   const [startTime, setStartTime] = useState(null);
@@ -494,17 +494,9 @@ _printed = _stdout.getvalue()
             className="results-wrapper"
             key={failCount}
             style={{
-              position: 'fixed',
-              bottom: '0',
-              left: '53%',
-              width: '47%',
-              maxHeight: '35vh',
-              overflowY: 'auto',
-              zIndex: 1000,
-              background: 'var(--bg-surface)',
-              border: '1px solid var(--border)',
-              borderTopLeftRadius: '8px',
-              boxShadow: '0 -4px 20px rgba(0,0,0,0.5)'
+              animation: (results?.status === "failed" || results?.status === "error") && !isRunning
+                ? "shake 0.4s ease, slideUp 0.3s ease"
+                : "slideUp 0.3s cubic-bezier(0.22, 1, 0.36, 1)"
             }}
           >
             <ResultsPanel 

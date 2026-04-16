@@ -1,7 +1,7 @@
 .code-editor {
   display: flex;
   background: var(--bg-elevated);
-  border-radius: 8px;
+  border-radius: 12px;
   overflow: hidden;
   height: 100%;
 }
@@ -9,11 +9,10 @@
 .line-numbers {
   display: flex;
   flex-direction: column;
-  padding: 16px 12px;
+  padding: 24px 18px;
   background: var(--bg-surface);
   color: var(--text-muted);
   font-family: var(--mono);
-  font-size: 13px;
   line-height: 1.6;
   text-align: right;
   user-select: none;

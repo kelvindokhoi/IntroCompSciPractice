@@ -7,7 +7,7 @@ import "./CodeEditor.css";
 
 const Editor = EditorModule.default || EditorModule;
 
-export default function CodeEditor({ value, onChange, fontSize = 13, errorLine = null }) {
+export default function CodeEditor({ value, onChange, fontSize = 20, errorLine = null }) {
   const editorRef = useRef(null);
 
   // Handle IDE-like key strokes
@@ -117,7 +117,7 @@ export default function CodeEditor({ value, onChange, fontSize = 13, errorLine =
 
   return (
     <div className="code-editor">
-      <div className="line-numbers" aria-hidden="true">
+      <div className="line-numbers" aria-hidden="true" style={{ fontSize: `${fontSize}px` }}>
         {Array.from({ length: Math.max(lines, 20) }, (_, i) => (
           <div key={i} className={`line-num${errorLine === i + 1 ? " line-num-error" : ""}`}>{i + 1}</div>
         ))}
@@ -128,7 +128,7 @@ export default function CodeEditor({ value, onChange, fontSize = 13, errorLine =
           value={value}
           onValueChange={onChange}
           highlight={(code) => Prism.highlight(code, Prism.languages.python, "python")}
-          padding={16}
+          padding={24}
           textareaClassName="code-textarea"
           preClassName="code-pre"
           onKeyDown={handleKeyDown}

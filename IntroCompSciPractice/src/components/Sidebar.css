@@ -1,5 +1,5 @@
 .sidebar {
-  width: 240px;
+  width: 360px;
   flex-shrink: 0;
   background: var(--bg-surface);
   border-right: 1px solid var(--border);
@@ -10,31 +10,31 @@
 }
 
 .sidebar-label {
-  font-size: 10px;
+  font-size: 15px;
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--text-muted);
-  padding: 16px 16px 8px;
+  padding: 24px 24px 12px;
 }
 
 /* Sidebar Search & Filter */
 .sidebar-search {
-  padding: 12px 16px;
+  padding: 18px 24px;
   border-bottom: 1px solid var(--border);
 }
 
 .search-input {
   width: 100%;
-  padding: 8px 12px;
+  padding: 12px 18px;
   background: var(--bg-elevated);
   border: 1px solid var(--border);
-  border-radius: 6px;
+  border-radius: 9px;
   color: var(--text-primary);
   font-family: var(--ui);
-  font-size: 12px;
+  font-size: 18px;
   outline: none;
   transition: all 0.2s ease;
-  margin-bottom: 8px;
+  margin-bottom: 12px;
 }
 
 .search-input:focus {
@@ -49,17 +49,17 @@
 .filter-chips {
   display: flex;
   flex-wrap: wrap;
-  gap: 6px;
+  gap: 9px;
 }
 
 .filter-chip {
-  padding: 4px 10px;
+  padding: 6px 15px;
   background: var(--bg-elevated);
   border: 1px solid var(--border);
-  border-radius: 12px;
+  border-radius: 18px;
   color: var(--text-secondary);
   font-family: var(--ui);
-  font-size: 11px;
+  font-size: 17px;
   cursor: pointer;
   transition: all 0.15s ease;
   text-transform: capitalize;
@@ -93,21 +93,21 @@
 }
 
 .topic-group {
-  margin-bottom: 2px;
+  margin-bottom: 3px;
 }
 
 .topic-header {
   width: 100%;
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 8px 16px;
+  gap: 12px;
+  padding: 12px 24px;
   background: none;
   border: none;
   color: var(--text-primary);
   cursor: pointer;
   font-family: var(--ui);
-  font-size: 13px;
+  font-size: 20px;
   font-weight: 600;
   text-align: left;
   transition: background 0.2s ease, padding-left 0.2s ease;
@@ -128,9 +128,9 @@
 }
 
 .topic-icon {
-  font-size: 11px;
+  font-size: 17px;
   color: var(--topic-color);
-  width: 28px;
+  width: 42px;
   text-align: center;
   flex-shrink: 0;
 }
@@ -140,7 +140,7 @@
 }
 
 .topic-chevron {
-  font-size: 16px;
+  font-size: 24px;
   color: var(--text-muted);
   transition: transform 0.2s;
   display: inline-block;
@@ -154,12 +154,12 @@
 .problem-list {
   display: flex;
   flex-direction: column;
-  padding-bottom: 4px;
+  padding-bottom: 6px;
   animation: expandList 0.22s ease;
 }
 
 @keyframes expandList {
-  from { opacity: 0; transform: translateY(-6px); }
+  from { opacity: 0; transform: translateY(-9px); }
   to   { opacity: 1; transform: translateY(0); }
 }
 
@@ -167,15 +167,15 @@
   width: 100%;
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 6px 16px 6px 20px;
+  gap: 12px;
+  padding: 9px 24px 9px 30px;
   background: none;
   border: none;
-  border-left: 2px solid transparent;
+  border-left: 3px solid transparent;
   color: var(--text-secondary);
   cursor: pointer;
   font-family: var(--ui);
-  font-size: 13px;
+  font-size: 20px;
   font-weight: 500;
   text-align: left;
   transition: all 0.2s ease;
@@ -184,7 +184,7 @@
 .problem-item:hover {
   background: var(--bg-hover);
   color: var(--text-primary);
-  padding-left: 24px;
+  padding-left: 36px;
 }
 
 @keyframes breathe {
@@ -202,9 +202,9 @@
 }
 
 .problem-number {
-  font-size: 10px;
+  font-size: 15px;
   color: var(--text-muted);
-  width: 20px;
+  width: 30px;
   flex-shrink: 0;
 }
 
@@ -213,15 +213,15 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  font-size: 11.5px;
+  font-size: 17px;
   text-align: center;
   margin-bottom: 0;
   line-height: normal;
 }
 
 .difficulty-dot {
-  width: 6px;
-  height: 6px;
+  width: 9px;
+  height: 9px;
   border-radius: 50%;
   flex-shrink: 0;
 }
@@ -251,8 +251,8 @@
 }
 
 .sidebar-guide {
-  padding: 12px 16px;
-  font-size: 10px;
+  padding: 18px 24px;
+  font-size: 15px;
   color: var(--text-muted);
   border-bottom: 1px solid var(--border-subtle);
   display: flex;
@@ -261,11 +261,11 @@
 }
 
 .dot {
-  width: 6px;
-  height: 6px;
+  width: 9px;
+  height: 9px;
   border-radius: 50%;
   display: inline-block;
-  margin-right: 4px;
+  margin-right: 6px;
 }
 
 .dot-easy {
@@ -281,7 +281,7 @@
 }
 
 .progress-container {
-  padding: 12px 16px;
+  padding: 18px 24px;
   border-bottom: 1px solid var(--border-subtle);
   flex-shrink: 0;
 }
@@ -290,11 +290,11 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-size: 10px;
+  font-size: 15px;
   text-transform: uppercase;
   letter-spacing: 0.1em;
   color: var(--text-muted);
-  margin-bottom: 8px;
+  margin-bottom: 12px;
   font-weight: 600;
 }
 
@@ -304,7 +304,7 @@
 }
 
 @keyframes rollUp {
-  0%   { opacity: 0; transform: translateY(8px); }
+  0%   { opacity: 0; transform: translateY(12px); }
   100% { opacity: 1; transform: translateY(0); }
 }
 
@@ -320,9 +320,9 @@
 }
 
 .progress-bar-bg {
-  height: 5px;
+  height: 8px;
   background: var(--bg-hover);
-  border-radius: 4px;
+  border-radius: 6px;
   overflow: hidden;
   border: 1px solid var(--border-subtle);
 }
@@ -330,7 +330,7 @@
 .progress-bar-fill {
   height: 100%;
   background: linear-gradient(90deg, var(--accent-blue), var(--accent-purple));
-  border-radius: 4px;
+  border-radius: 6px;
   transition: width 0.6s cubic-bezier(0.22, 1, 0.36, 1);
   position: relative;
   overflow: hidden;
@@ -340,7 +340,7 @@
   content: '';
   position: absolute;
   top: 0; left: -60%;
-  width: 40%;
+  width: 60%;
   height: 100%;
   background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
   animation: shimmer 2.2s ease-in-out infinite;
@@ -356,7 +356,7 @@
     position: absolute;
     top: 0;
     bottom: 0;
-    left: -240px;
+    left: -360px;
     z-index: 50;
     transition: left 0.3s ease;
   }

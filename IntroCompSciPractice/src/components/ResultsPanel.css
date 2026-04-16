@@ -1,6 +1,7 @@
 .results-panel {
   flex-shrink: 0;
-  max-height: 42vh;
+  height: auto;
+  max-height: 30vh;
   overflow-y: auto;
   border-top: 1px solid var(--border);
   background: var(--bg-surface);

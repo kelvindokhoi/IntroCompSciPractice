@@ -613,6 +613,16 @@ details[open] .hint-summary {
   flex-direction: column;
 }
 
+.results-wrapper {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  max-height: 20vh;
+  overflow-y: auto;
+  z-index: 50;
+}
+
 .confetti-container {
   position: fixed;
   top: 0; left: 0; right: 0; bottom: 0;

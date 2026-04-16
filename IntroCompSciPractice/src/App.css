@@ -124,6 +124,11 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
+/* 150% Browser Zoom Simulation */
+#root {
+  zoom: 1.5;
+}
+
 .app {
   display: flex;
   flex-direction: column;

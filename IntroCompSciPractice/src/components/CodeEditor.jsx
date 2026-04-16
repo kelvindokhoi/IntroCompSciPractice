@@ -7,7 +7,7 @@ import "./CodeEditor.css";
 
 const Editor = EditorModule.default || EditorModule;
 
-export default function CodeEditor({ value, onChange }) {
+export default function CodeEditor({ value, onChange, fontSize = 13, errorLine = null }) {
   const editorRef = useRef(null);
 
   // Handle IDE-like key strokes
@@ -119,7 +119,7 @@ export default function CodeEditor({ value, onChange }) {
     <div className="code-editor">
       <div className="line-numbers" aria-hidden="true">
         {Array.from({ length: Math.max(lines, 20) }, (_, i) => (
-          <div key={i} className="line-num">{i + 1}</div>
+          <div key={i} className={`line-num${errorLine === i + 1 ? " line-num-error" : ""}`}>{i + 1}</div>
         ))}
       </div>
       <div className="editor-container">
@@ -134,7 +134,7 @@ export default function CodeEditor({ value, onChange }) {
           onKeyDown={handleKeyDown}
           style={{
             fontFamily: "var(--mono)",
-            fontSize: "13px",
+            fontSize: `${fontSize}px`,
             lineHeight: "1.6",
             minHeight: "100%",
             outline: "none"

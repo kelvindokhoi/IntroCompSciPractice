@@ -6,7 +6,7 @@ export default function ResultsPanel({ results, isRunning, total, onClose }) {
       <div className="results-panel">
         <div className="results-loading">
           <span className="spinner-lg" />
-          <span>Running tests…</span>
+          <span>Loading Python runtime…</span>
         </div>
       </div>
     );
@@ -17,8 +17,17 @@ export default function ResultsPanel({ results, isRunning, total, onClose }) {
   const { status, cases, failedAt, errorMessage } = results;
 
   return (
-    <div className="results-panel" style={{ animation: "fadeSlideIn 0.25s ease" }}>
+    <div className="results-panel">
       <div className={`results-header status-${status}`}>
+        {status === "running" && (
+          <>
+            <span className="status-icon running-icon">⏳</span>
+            <span className="status-text">Running… {cases.length} / {total} complete</span>
+            <div className="mini-progress-bar">
+              <div className="mini-progress-fill" style={{ width: `${(cases.length / total) * 100}%` }} />
+            </div>
+          </>
+        )}
         {status === "passed" && (
           <>
             <span className="status-icon">✓</span>
@@ -41,7 +50,7 @@ export default function ResultsPanel({ results, isRunning, total, onClose }) {
             </span>
           </>
         )}
-        {onClose && (
+        {onClose && status !== "running" && (
           <button className="close-btn" onClick={onClose} title="Close Panel">✕</button>
         )}
       </div>
@@ -57,6 +66,7 @@ export default function ResultsPanel({ results, isRunning, total, onClose }) {
           <div
             key={c.id}
             className={`case-row ${c.passed ? "case-pass" : "case-fail"}`}
+            style={{ animation: "rowPop 0.2s ease both" }}
           >
             <div className="case-summary">
               <span className={`case-icon ${c.passed ? "pass" : "fail"}`}>

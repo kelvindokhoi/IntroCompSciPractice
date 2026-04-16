@@ -39,12 +39,34 @@
   flex-shrink: 0;
 }
 
-.status-passed { color: var(--accent-green); background: var(--accent-green-dim); }
-.status-failed { color: var(--accent-red); background: var(--accent-red-dim); }
+.status-passed { color: var(--accent-green);  background: var(--accent-green-dim); }
+.status-failed { color: var(--accent-red);    background: var(--accent-red-dim); }
 .status-error  { color: var(--accent-yellow); background: var(--accent-yellow-dim); }
+.status-running { color: var(--accent-blue);  background: rgba(96, 165, 250, 0.08); }
 
 .status-icon {
   font-size: 16px;
+}
+
+.running-icon {
+  animation: spin 1.4s linear infinite;
+  display: inline-block;
+}
+
+.mini-progress-bar {
+  margin-left: auto;
+  width: 80px;
+  height: 4px;
+  background: var(--bg-hover);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.mini-progress-fill {
+  height: 100%;
+  background: var(--accent-blue);
+  border-radius: 4px;
+  transition: width 0.3s ease;
 }
 
 .cases-list {
@@ -57,6 +79,11 @@
   margin-bottom: 6px;
   overflow: hidden;
   border: 1px solid transparent;
+}
+
+@keyframes rowPop {
+  from { opacity: 0; transform: translateX(-10px); }
+  to   { opacity: 1; transform: translateX(0); }
 }
 
 .case-pass {

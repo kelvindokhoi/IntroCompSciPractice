@@ -1,0 +1,260 @@
+.stats-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  backdrop-filter: blur(4px);
+}
+
+.stats-modal {
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  width: 90%;
+  max-width: 500px;
+  max-height: 80vh;
+  overflow: hidden;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+}
+
+.stats-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border);
+}
+
+.stats-header h2 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.stats-header .close-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--text-secondary);
+  font-size: 16px;
+  cursor: pointer;
+  padding: 0;
+  transition: all 0.2s ease;
+}
+
+.stats-header .close-btn:hover {
+  background: var(--bg-hover);
+  border-color: var(--text-muted);
+  color: var(--text-primary);
+}
+
+.stats-content {
+  padding: 20px;
+  overflow-y: auto;
+  max-height: calc(80vh - 60px);
+}
+
+.stats-section {
+  margin-bottom: 24px;
+}
+
+.stats-section:last-child {
+  margin-bottom: 0;
+}
+
+.stats-section h3 {
+  margin: 0 0 12px 0;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+/* Overall Progress */
+.stats-section.overall {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px;
+  background: var(--bg-elevated);
+  border-radius: 8px;
+}
+
+.big-stat {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+}
+
+.big-number {
+  font-size: 42px;
+  font-weight: 700;
+  color: var(--accent-green);
+  line-height: 1;
+}
+
+.big-label {
+  font-size: 16px;
+  color: var(--text-secondary);
+}
+
+.percentage-ring {
+  position: relative;
+  width: 80px;
+  height: 80px;
+}
+
+.percentage-ring svg {
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+}
+
+.ring-bg {
+  stroke: var(--border);
+}
+
+.ring-fill {
+  stroke: var(--accent-green);
+  transition: stroke-dasharray 0.5s ease;
+}
+
+.percentage-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+/* Difficulty Breakdown */
+.difficulty-breakdown {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+
+.diff-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 16px 12px;
+  background: var(--bg-elevated);
+  border-radius: 8px;
+  border: 1px solid var(--border);
+}
+
+.diff-count {
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.diff-total {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-bottom: 4px;
+}
+
+.diff-label {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-secondary);
+}
+
+.diff-stat.easy .diff-count {
+  color: var(--accent-green);
+}
+
+.diff-stat.medium .diff-count {
+  color: var(--accent-yellow);
+}
+
+.diff-stat.hard .diff-count {
+  color: var(--accent-red);
+}
+
+/* Topic Progress Bars */
+.topic-bars {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.topic-bar-row {
+  display: grid;
+  grid-template-columns: 120px 1fr 50px;
+  align-items: center;
+  gap: 12px;
+}
+
+.topic-name {
+  font-size: 12px;
+  color: var(--text-secondary);
+  text-transform: capitalize;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.topic-bar-container {
+  display: flex;
+  align-items: center;
+}
+
+.topic-bar-bg {
+  width: 100%;
+  height: 6px;
+  background: var(--border);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.topic-bar-fill {
+  height: 100%;
+  background: var(--accent-blue);
+  border-radius: 3px;
+  transition: width 0.4s ease;
+}
+
+.topic-fraction {
+  font-size: 11px;
+  color: var(--text-muted);
+  text-align: right;
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+  .stats-modal {
+    width: 95%;
+    max-height: 90vh;
+  }
+
+  .difficulty-breakdown {
+    grid-template-columns: 1fr;
+  }
+
+  .topic-bar-row {
+    grid-template-columns: 100px 1fr 40px;
+  }
+
+  .stats-section.overall {
+    flex-direction: column;
+    gap: 16px;
+    text-align: center;
+  }
+}

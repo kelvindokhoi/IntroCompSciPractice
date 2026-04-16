@@ -1797,4 +1797,504 @@ export const problems = {
       "solutionExplanation": "By calculating the distance of the current row from the middle using abs(), we determine how many leading spaces are needed. The number of stars is simply the total width N minus twice the leading spaces."
     }
   ]
+,
+  "multidimensional_lists": [
+    {
+      "id": "mdl-1",
+      "title": "Sum of a Matrix",
+      "topic": "Multidimensional Lists",
+      "difficulty": "easy",
+      "description": "Read integers M and N on the first line (M rows, N columns). Then read M * N integers from the next lines to form a matrix. Print the total sum of all elements.",
+      "starterCode": "# Write your code here\n",
+      "positiveKeywords": [],
+      "negativeKeywords": [],
+      "testCases": Array.from({length: 10}, (_, i) => {
+        const h = i > 1;
+        const M = 2 + (i % 3);
+        const N = 2 + (i % 2);
+        let sum = 0;
+        let inputs = `${M} ${N}\n`;
+        let testInputs = `${M} ${N}\n`;
+        for(let j=0; j<M*N; j++) {
+            const v = (i*j) % 10 - 2;
+            sum += v;
+            inputs += `${v}\n`;
+            testInputs += `${v}\n`;
+        }
+        return {
+          "label": `Test ${i+1}`,
+          "input": inputs.trim(),
+          "testInput": testInputs,
+          "expected": `${sum}`,
+          "hidden": h
+        };
+      }),
+      "constraints": ["Assume valid inputs."],
+      "hints": ["Use a nested loop or a single loop, depending on how you build your logic."],
+      "solution": "dimensions = input().split()\nm = int(dimensions[0])\nn = int(dimensions[1])\ntotal = 0\nfor _ in range(m * n):\n    total += int(input())\nprint(total)",
+      "solutionExplanation": "Simply read M and N, then read M*N integers and accumulate."
+    },
+    {
+      "id": "mdl-2",
+      "title": "Diagonal Sum",
+      "topic": "Multidimensional Lists",
+      "difficulty": "medium",
+      "description": "Read an integer N representing an NxN square matrix. Then read N lines where each line contains N space-separated integers. Compute and print the sum of the main diagonal (top-left to bottom-right).",
+      "starterCode": "# Write your code here\n",
+      "positiveKeywords": [],
+      "negativeKeywords": [],
+      "testCases": Array.from({length: 10}, (_, i) => {
+        const N = 1 + (i % 5);
+        let sum = 0;
+        let inputs = `${N}\n`;
+        let testInputs = `${N}\n`;
+        for(let r=0; r<N; r++) {
+            let row = [];
+            for(let c=0; c<N; c++) {
+               let val = r + c + i;
+               if (r === c) sum += val;
+               row.push(val);
+            }
+            inputs += row.join(" ") + "\n";
+            testInputs += row.join(" ") + "\n";
+        }
+        return {
+          "label": `Test ${i+1}`,
+          "input": inputs.trim(),
+          "testInput": testInputs,
+          "expected": `${sum}`,
+          "hidden": i > 1
+        };
+      }),
+      "constraints": ["N >= 1"],
+      "hints": ["The main diagonal consists of elements where the row index equals the column index."],
+      "solution": "n = int(input())\ntotal = 0\nfor i in range(n):\n    row_str = input().split()\n    row = [int(x) for x in row_str]\n    total += row[i]\nprint(total)",
+      "solutionExplanation": "Since the main diagonal is element i at row i, we just sum up row[i] for each row."
+    },
+    {
+       "id": "mdl-3",
+       "title": "Matrix Transpose",
+       "topic": "Multidimensional Lists",
+       "difficulty": "hard",
+       "description": "Read integers R and C for rows and cols. Then read R lines, each with C space-separated integers. Print the transposed matrix (C rows, R cols), each row on a new line with space-separated numbers.",
+       "starterCode": "# Write your code here\n",
+       "positiveKeywords": [],
+       "negativeKeywords": [],
+       "testCases": Array.from({length: 10}, (_, i) => {
+          let R = 1 + (i % 3);
+          let C = 1 + ((i+1) % 3);
+          if (i===3) { R=3; C=3; }
+          let inputs = `${R} ${C}\n`;
+          let m = [];
+          for(let r=0; r<R; r++) {
+             let row = [];
+             for(let c=0; c<C; c++) {
+                 row.push(r*10 + c + i);
+             }
+             inputs += row.join(" ") + "\n";
+             m.push(row);
+          }
+          let expectedLines = [];
+          for(let c=0; c<C; c++) {
+              let expectedRow = [];
+              for(let r=0; r<R; r++) expectedRow.push(m[r][c]);
+              expectedLines.push(expectedRow.join(" "));
+          }
+          let expected = expectedLines.join("\n");
+          return { "label": `Test ${i+1}`, "input": inputs.trim(), "testInput": inputs, "expected": expected, "hidden": i>1 };
+       }),
+       "constraints": [],
+       "hints": ["Read into a 2D list, then loop over columns out of rows."],
+       "solution": "dimensions = input().split()\nr = int(dimensions[0])\nc = int(dimensions[1])\nm = []\nfor _ in range(r):\n    row_str = input().split()\n    m.append([int(x) for x in row_str])\nfor j in range(c):\n    row = [str(m[i][j]) for i in range(r)]\n    print(' '.join(row))",
+       "solutionExplanation": "Reads the matrix into m, then prints the transposed rows."
+    }
+  ],
+  "objects_and_classes": [
+    {
+       "id": "oop-1",
+       "title": "Rectangle Class",
+       "topic": "Objects and Classes",
+       "difficulty": "medium",
+       "description": "Create a class Rectangle that is initialized with width and height (read from 2 lines of input as floats). It should have methods get_area() and get_perimeter(). Print the area and perimeter on separate lines, formatted to 2 decimals.",
+       "starterCode": "class Rectangle:\n    # Your code here\n    pass\n\nw = float(input())\nh = float(input())\n# create rect and print outputs",
+       "positiveKeywords": [{"word": "class Rectangle", "feedback": "You must define a class named Rectangle"}, {"word": "def __init__(", "feedback": "You must implement the constructor."}],
+       "negativeKeywords": [],
+       "testCases": Array.from({length: 10}, (_, i) => {
+          let w = (i + 1.5) * 2;
+          let h = (i + 0.5) * 3;
+          let a = w * h;
+          let p = 2 * (w + h);
+          return { "label": `Test ${i+1}`, "input": `${w}\n${h}`, "testInput": `${w}\n${h}\n`, "expected": `${a.toFixed(2)}\n${p.toFixed(2)}`, "hidden": i>1 };
+       }),
+       "constraints": [],
+       "hints": ["Define class Rectangle: def __init__(self, w, h): ..."],
+       "solution": "class Rectangle:\n    def __init__(self, w, h):\n        self.w = w\n        self.h = h\n    def get_area(self):\n        return self.w * self.h\n    def get_perimeter(self):\n        return 2 * (self.w + self.h)\n\nw = float(input())\nh = float(input())\nr = Rectangle(w, h)\nprint(f'{r.get_area():.2f}')\nprint(f'{r.get_perimeter():.2f}')",
+       "solutionExplanation": "A standard Python class with self bindings and formatting outputs."
+    },
+    {
+       "id": "oop-2",
+       "title": "Bank Account",
+       "topic": "Objects and Classes",
+       "difficulty": "medium",
+       "description": "Create a BankAccount class. The constructor should take an initial balance. It should have deposit(amount) and withdraw(amount) methods. The first line of input is the initial balance. Subsequent lines are operations: D <amount> or W <amount>. Print the final balance.",
+       "starterCode": "# Write your class and use it\nimport sys\n",
+       "positiveKeywords": [{"word": "class", "feedback": "Must use a class."}],
+       "negativeKeywords": [],
+       "testCases": Array.from({length: 10}, (_, i) => {
+          let init = 100 * (i+1);
+          let bal = init;
+          let ops = [];
+          for (let k=0; k<i+2; k++) {
+             if (k%2===0) { bal += 50; ops.push("D 50"); }
+             else { bal -= 20; ops.push("W 20"); }
+          }
+          return { "label": `Test ${i+1}`, "input": `${init}\n${ops.join("\n")}`, "testInput": `${init}\n${ops.join("\n")}\n`, "expected": `${bal}`, "hidden": i>1 };
+       }),
+       "constraints": [],
+       "hints": ["Use sys.stdin.read().splitlines() to get the subsequent operations."],
+       "solution": "import sys\nlines = sys.stdin.read().splitlines()\nclass BankAccount:\n    def __init__(self, bal): self.bal = bal\n    def deposit(self, a): self.bal += a\n    def withdraw(self, a): self.bal -= a\nacct = BankAccount(int(lines[0]))\nfor op in lines[1:]:\n    if op.startswith('D'): acct.deposit(int(op.split()[1]))\n    elif op.startswith('W'): acct.withdraw(int(op.split()[1]))\nprint(acct.bal)",
+       "solutionExplanation": "Parses the operations line-by-line and triggers class methods."
+    },
+    {
+       "id": "oop-3",
+       "title": "Point Class Distance",
+       "topic": "Objects and Classes",
+       "difficulty": "medium",
+       "description": "Create a Point class initialized with x and y coordinates. Add a method distance(other_point) that calculates the Euclidean distance between self and another Point instance. You are given 4 coordinates on 4 lines: x1, y1, x2, y2. Print the distance to 3 decimal places.",
+       "starterCode": "class Point:\n    pass\n",
+       "positiveKeywords": [{"word": "class Point", "feedback": "Must define Point."}],
+       "negativeKeywords": [],
+       "testCases": Array.from({length: 10}, (_, i) => {
+           let x1 = i*2, y1 = i*2+1, x2= i*3, y2= i*1-2;
+           let d = Math.sqrt((x2-x1)**2 + (y2-y1)**2);
+           return { "label": `Test ${i+1}`, "input": `${x1}\n${y1}\n${x2}\n${y2}`, "testInput": `${x1}\n${y1}\n${x2}\n${y2}\n`, "expected": `${d.toFixed(3)}`, "hidden": i>1 };
+       }),
+       "constraints": [],
+       "hints": ["distance is sqrt((x2-x1)**2 + (y2-y1)**2). You can use math.sqrt"],
+       "solution": "import math\nclass Point:\n    def __init__(self, x, y):\n        self.x=x\n        self.y=y\n    def distance(self, p):\n        return math.sqrt((self.x-p.x)**2 + (self.y-p.y)**2)\nx1,y1,x2,y2=(float(input()) for _ in range(4))\np1=Point(x1,y1)\np2=Point(x2,y2)\nprint(f'{p1.distance(p2):.3f}')",
+       "solutionExplanation": "A classic class use case with math module."
+    }
+  ],
+  "files_and_exceptions": [
+    {
+       "id": "file-1",
+       "title": "Write Even Numbers to File",
+       "topic": "Files and Exception Handling",
+       "difficulty": "medium",
+       "description": "Read integers from 'input.txt' where each line has one integer. Write only the even integers into 'output.txt', each on a new line. (You must create/write to 'output.txt')",
+       "starterCode": "# Write your code here\n",
+       "positiveKeywords": [{"word": "open(", "feedback": "Use open() function"}],
+       "negativeKeywords": [],
+       "testCases": Array.from({length: 10}, (_, i) => {
+          let list = []; let evens = [];
+          for (let k=0; k<i+3; k++) {
+              let v = i*3 + k;
+              list.push(v);
+              if (v%2 === 0) evens.push(v);
+          }
+          return { "label": `Test ${i+1}`, "input": "", "files": {"input.txt": list.join("\n")}, "expectedFile": {"name": "output.txt", "content": evens.join("\n") + (evens.length > 0 ? "\n" : "") }, "expected": "", "hidden": i>1 };
+       }),
+       "constraints": ["Assume input.txt always exists."],
+       "hints": ["open('input.txt', 'r') and open('output.txt', 'w')"],
+       "solution": "with open('input.txt', 'r') as f:\n    lines = f.read().splitlines()\nwith open('output.txt', 'w') as out:\n    for L in lines:\n        if L and int(L) % 2 == 0:\n            out.write(L + '\\n')",
+       "solutionExplanation": "Uses open() in read and write modes to filter contents."
+    },
+    {
+       "id": "file-2",
+       "title": "Safe Division Exception",
+       "topic": "Files and Exception Handling",
+       "difficulty": "easy",
+       "description": "Read two inputs numerator and denominator on separate lines. Print 'Result: ' followed by integer division formatted value. Catch ZeroDivisionError and print 'Cannot divide by zero'. Catch ValueError and print 'Invalid input'.",
+       "starterCode": "# Write your code here\n",
+       "positiveKeywords": [{"word": "except", "feedback": "Must use exception handling"}],
+       "negativeKeywords": [],
+       "testCases": [
+          {"label":"Test 1", "testInput":"10\n2\n", "expected": "Result: 5", "hidden": 0},
+          {"label":"Test 2", "testInput":"10\n0\n", "expected": "Cannot divide by zero", "hidden": 0},
+          {"label":"Test 3", "testInput":"10\nabc\n", "expected": "Invalid input", "hidden": 0},
+          {"label":"Test 4", "testInput":"abc\n10\n", "expected": "Invalid input", "hidden": 1},
+          {"label":"Test 5", "testInput":"100\n3\n", "expected": "Result: 33", "hidden": 1},
+          {"label":"Test 6", "testInput":"0\n10\n", "expected": "Result: 0", "hidden": 1},
+          {"label":"Test 7", "testInput":"0\n0\n", "expected": "Cannot divide by zero", "hidden": 1},
+          {"label":"Test 8", "testInput":"-10\n-2\n", "expected": "Result: 5", "hidden": 1},
+          {"label":"Test 9", "testInput":"hello\nworld\n", "expected": "Invalid input", "hidden": 1},
+          {"label":"Test 10", "testInput":"1\nxyz\n", "expected": "Invalid input", "hidden": 1}
+       ],
+       "constraints": [],
+       "hints": ["Use a try block and multiple except blocks"],
+       "solution": "try:\n    a = int(input())\n    b = int(input())\n    print(f'Result: {a // b}')\nexcept ValueError:\n    print('Invalid input')\nexcept ZeroDivisionError:\n    print('Cannot divide by zero')",
+       "solutionExplanation": "A classic demonstration of multiple catch blocks."
+    },
+    {
+       "id": "file-3",
+       "title": "Missing File Handling",
+       "topic": "Files and Exception Handling",
+       "difficulty": "easy",
+       "description": "Read a filename from standard input. Try to open it and print its first line. If the file does not exist, catch FileNotFoundError and print 'File not found'.",
+       "starterCode": "# Write your code here\n",
+       "positiveKeywords": [{"word": "FileNotFoundError", "feedback": "Must catch this error"}],
+       "negativeKeywords": [],
+       "testCases": [
+          {"label":"Test 1", "testInput":"data.txt\n", "files": {"data.txt": "Line 1"}, "expected": "Line 1", "hidden": 0},
+          {"label":"Test 2", "testInput":"missing.txt\n", "files": {"dummy.txt": "a"}, "expected": "File not found", "hidden": 0},
+          {"label":"Test 3", "testInput":"secret.txt\n", "files": {"secret.txt": "Top Secret\nNext"}, "expected": "Top Secret", "hidden": 1},
+          {"label":"Test 4", "testInput":"no.txt\n", "files": {}, "expected": "File not found", "hidden": 1},
+          {"label":"Test 5", "testInput":"yes.txt\n", "files": {"yes.txt": "Hello\nWorld"}, "expected": "Hello", "hidden": 1},
+          {"label":"Test 6", "testInput":"empty.txt\n", "files": {"empty.txt": ""}, "expected": "", "hidden": 1},
+          {"label":"Test 7", "testInput":"what.txt\n", "files": {}, "expected": "File not found", "hidden": 1},
+          {"label":"Test 8", "testInput":"a.txt\n", "files": {"a.txt": "A"}, "expected": "A", "hidden": 1},
+          {"label":"Test 9", "testInput":"b.txt\n", "files": {}, "expected": "File not found", "hidden": 1},
+          {"label":"Test 10", "testInput":"c.txt\n", "files": {"c.txt": "C"}, "expected": "C", "hidden": 1}
+       ],
+       "constraints": [],
+       "hints": ["try: open(filename)... except FileNotFoundError:"],
+       "solution": "fn = input().strip()\ntry:\n    with open(fn, 'r') as f:\n        print(f.readline().strip('\\n'))\nexcept FileNotFoundError:\n    print('File not found')",
+       "solutionExplanation": "Error handling when working with files."
+    }
+  ,
+    {
+       "id": "file-4",
+       "title": "Append Mode Logging",
+       "topic": "Files and Exception Handling",
+       "difficulty": "medium",
+       "description": "The file 'log.txt' already contains a line 'BEGIN\n'. Read lines from standard input until 'STOP' is provided. Append these lines to 'log.txt'.",
+       "starterCode": "# Write your code here\n",
+       "positiveKeywords": [{"word": "'a'", "feedback": "Must use 'a' for append mode"}],
+       "negativeKeywords": [],
+       "testCases": Array.from({length: 10}, (_, i) => {
+          let lines = [];
+          for (let k = 0; k < i + 1; k++) lines.push("Event " + k);
+          return {
+             "label": `Test ${i + 1}`,
+             "input": lines.join("\n") + "\nSTOP",
+             "files": {"log.txt": "BEGIN\n"},
+             "expectedFile": {"name": "log.txt", "content": "BEGIN\n" + lines.map(x=>x+"\n").join("")},
+             "expected": "",
+             "hidden": i > 1
+          };
+       }),
+       "constraints": [],
+       "hints": ["open('log.txt', 'a') to avoid overwriting the file"],
+       "solution": "with open('log.txt', 'a') as f:\n    while True:\n        line = input().strip()\n        if line == 'STOP':\n            break\n        f.write(line + '\\n')",
+       "solutionExplanation": "We open in 'a' mode to append, so 'BEGIN' is preserved."
+    },
+    {
+       "id": "file-5",
+       "title": "Raising Exceptions",
+       "topic": "Files and Exception Handling",
+       "difficulty": "medium",
+       "description": "Read an integer from standard input. If it is less than zero, use the `raise` keyword to raise an `Exception` with the message 'My error message'. Ensure your code wraps the input logic in a `try...except Exception:` block that prints 'Caught negative' if the exception is raised. Otherwise, print 'Valid'.",
+       "starterCode": "# Write your code here\n",
+       "positiveKeywords": [{"word": "raise Exception", "feedback": "You must explicitly raise the Exception."}, {"word": "except Exception", "feedback": "You must catch Exception"}],
+       "negativeKeywords": [],
+       "testCases": Array.from({length: 10}, (_, i) => {
+          let num = (i % 2 === 0) ? (i*5) : -(i*3 + 1);
+          return {
+             "label": `Test ${i + 1}`,
+             "testInput": `${num}\n`,
+             "expected": num < 0 ? "Caught negative" : "Valid",
+             "hidden": i > 1
+          };
+       }),
+       "constraints": [],
+       "hints": ["Use: if x < 0: raise Exception('My error message')", "Wrap reading input in try...except Exception:"],
+       "solution": "try:\n    x = int(input())\n    if x < 0:\n        raise Exception('My error message')\n    print('Valid')\nexcept Exception:\n    print('Caught negative')",
+       "solutionExplanation": "Explicitly raises a generic Exception and catches it."
+    }],
+  "tuples_sets_dictionaries": [
+     {
+       "id": "tsd-1",
+       "title": "Tuple Word Lengths",
+       "topic": "Tuples, Sets, and Dictionaries",
+       "difficulty": "easy",
+       "description": "Read a line of words space-separated. Print a list of tuples, where each tuple is (word, length).",
+       "starterCode": "# Write your code here\n",
+       "positiveKeywords": [],
+       "negativeKeywords": [],
+       "testCases": Array.from({length: 10}, (_, i) => {
+          let words = [...Array(i+2).keys()].map(x => "w".repeat(x+1) + i);
+          let ex = "[" + words.map(x => `('${x}', ${x.length})`).join(", ") + "]";
+          return {"label": `Test ${i+1}`, "testInput": words.join(" ") + "\n", "expected": ex, "hidden": i>1};
+       }),
+       "constraints": [],
+       "hints": ["Use a list comprehension to form the tuples"],
+       "solution": "words = input().split()\nprint([(w, len(w)) for w in words])",
+       "solutionExplanation": "Mapping to tuples."
+     },
+     {
+       "id": "tsd-2",
+       "title": "Set Intersect",
+       "topic": "Tuples, Sets, and Dictionaries",
+       "difficulty": "medium",
+       "description": "Read two lines, each containing space-separated integers. Print a sorted list of the integers that are present in both lines. Use sets.",
+       "starterCode": "# Write your code here\n",
+       "positiveKeywords": [{"word": "set", "feedback": "Must use sets for intersection."}],
+       "negativeKeywords": [],
+       "testCases": Array.from({length: 10}, (_, i) => {
+          let a = [1,2,i+2, i+3]; let b = [i+3, i+4, 1];
+          let res = a.filter(x => b.includes(x)).sort((x,y)=>x-y).map(String);
+          return {"label": `Test ${i+1}`, "testInput": a.join(" ") + "\n" + b.join(" ")+"\n", "expected": "[" + res.join(", ") + "]", "hidden": i>1};
+       }),
+       "constraints": [],
+       "hints": ["Use the set intersection operator & and then sort()"],
+       "solution": "s1 = set(map(int, input().split()))\ns2 = set(map(int, input().split()))\nres = sorted(list(s1 & s2))\nprint(res)",
+       "solutionExplanation": "Sets efficiently find common elements using &."
+     },
+     {
+       "id": "tsd-3",
+       "title": "Dictionary Frequency",
+       "topic": "Tuples, Sets, and Dictionaries",
+       "difficulty": "medium",
+       "description": "Read a string of space-separated words. Print the frequency of each word as a dictionary, sorted by keys.",
+       "starterCode": "# Write your code here\n",
+       "positiveKeywords": [],
+       "negativeKeywords": [],
+       "testCases": [
+          {"label": "Test 1", "testInput": "apple banana apple\n", "expected": "{'apple': 2, 'banana': 1}", "hidden": 0},
+          {"label": "Test 2", "testInput": "dog dog dog cat\n", "expected": "{'cat': 1, 'dog': 3}", "hidden": 0},
+          {"label": "Test 3", "testInput": "a b c a b c\n", "expected": "{'a': 2, 'b': 2, 'c': 2}", "hidden": 1},
+          {"label": "Test 4", "testInput": "z z\n", "expected": "{'z': 2}", "hidden": 1},
+          {"label": "Test 5", "testInput": "one\n", "expected": "{'one': 1}", "hidden": 1},
+          {"label": "Test 6", "testInput": "hi hi hi\n", "expected": "{'hi': 3}", "hidden": 1},
+          {"label": "Test 7", "testInput": "y x z x\n", "expected": "{'x': 2, 'y': 1, 'z': 1}", "hidden": 1},
+          {"label": "Test 8", "testInput": "hello\n", "expected": "{'hello': 1}", "hidden": 1},
+          {"label": "Test 9", "testInput": "A A B\n", "expected": "{'A': 2, 'B': 1}", "hidden": 1},
+          {"label": "Test 10", "testInput": "word word word word\n", "expected": "{'word': 4}", "hidden": 1}
+       ],
+       "constraints": [],
+       "hints": ["Use a dict. You can construct a new sorted dict from the keys."],
+       "solution": "words = input().split()\nd = {}\nfor w in words: d[w] = d.get(w, 0) + 1\nres = {k: d[k] for k in sorted(d.keys())}\nprint(res)",
+       "solutionExplanation": "A classic frequency counter followed by dict comprehension using sorted keys."
+     }
+  ,
+     {
+       "id": "tsd-4",
+       "title": "Tuple Unpacking",
+       "topic": "Tuples, Sets, and Dictionaries",
+       "difficulty": "easy",
+       "description": "Read three space-separated inputs on a single line. Assign them directly to three variables using tuple unpacking. Print them in the order: third, structured as: '1: [third] 2: [first] 3: [second]'.",
+       "starterCode": "# Write your code here\n",
+       "positiveKeywords": [],
+       "negativeKeywords": [],
+       "testCases": Array.from({length: 10}, (_, i) => {
+          let a = i, b = i*2, c = i*3;
+          return {
+             "label": `Test ${i + 1}`,
+             "testInput": `${a} ${b} ${c}\n`,
+             "expected": `1: ${c} 2: ${a} 3: ${b}`,
+             "hidden": i > 1
+          };
+       }),
+       "constraints": [],
+       "hints": ["a, b, c = input().split()"],
+       "solution": "a, b, c = input().split()\nprint(f\'1: {c} 2: {a} 3: {b}\')",
+       "solutionExplanation": "Unpacks identically mapped variables on one line."
+     },
+     {
+       "id": "tsd-5",
+       "title": "Set Symmetric Difference",
+       "topic": "Tuples, Sets, and Dictionaries",
+       "difficulty": "medium",
+       "description": "Read two lines of space-separated integers. Print a sorted list of elements that appear in exactly one of the lines, but not both (symmetric difference).",
+       "starterCode": "# Write your code here\n",
+       "positiveKeywords": [{"word": "set", "feedback": "Use a set."}],
+       "negativeKeywords": [],
+       "testCases": Array.from({length: 10}, (_, i) => {
+          let A = [1, i+2, i+3];
+          let B = [i+3, 10, 11];
+          let res = [...A.filter(x => !B.includes(x)), ...B.filter(x => !A.includes(x))].sort((a,b)=>a-b);
+          return {
+             "label": `Test ${i + 1}`,
+             "testInput": `${A.join(" ")}\n${B.join(" ")}\n`,
+             "expected": "[" + res.join(", ") + "]",
+             "hidden": i > 1
+          };
+       }),
+       "constraints": [],
+       "hints": ["Use the symmetric difference operator ^"],
+       "solution": "A = set(map(int, input().split()))\nB = set(map(int, input().split()))\nres = sorted(list(A ^ B))\nprint(res)",
+       "solutionExplanation": "Symmetric difference finds explicitly disjoint elements."
+     },
+     {
+       "id": "tsd-6",
+       "title": "Dict Lookup Default",
+       "topic": "Tuples, Sets, and Dictionaries",
+       "difficulty": "medium",
+       "description": "Read an integer N. Next N lines are 'Key Value' pairs mapping strings to strings. Then read M. Next M lines are queries. For each query, print the corresponding value or 'Not found' if the key doesn't exist.",
+       "starterCode": "# Write your code here\n",
+       "positiveKeywords": [],
+       "negativeKeywords": [],
+       "testCases": Array.from({length: 10}, (_, i) => {
+           let map = {"A": "1", "B": "2"};
+           let queries = ["A", "B", "C"];
+           return {
+              "label": `Test ${i + 1}`,
+              "testInput": `2\nA 1\nB 2\n3\nA\nB\nC\n`,
+              "expected": "1\n2\nNot found",
+              "hidden": i > 0
+           };
+       }),
+       "constraints": [],
+       "hints": ["Use dict.get(query, 'Not found')"],
+       "solution": "n = int(input())\nd = {}\nfor _ in range(n):\n    k, v = input().split()\n    d[k] = v\nm = int(input())\nfor _ in range(m):\n    q = input().strip()\n    print(d.get(q, 'Not found'))",
+       "solutionExplanation": "Uses get with a default specified to handle missing."
+     }],
+  "recursion": [
+    {
+       "id": "rec-1",
+       "title": "Recursive Factorial",
+       "topic": "Recursion",
+       "difficulty": "easy",
+       "description": "Write a recursive function to compute the factorial of n. Print the result.",
+       "starterCode": "def factorial(n):\n    pass\n\nprint(factorial(int(input())))",
+       "positiveKeywords": [{"word": "factorial(", "feedback": "Function must call itself"}],
+       "negativeKeywords": [{"word": "math.factorial", "feedback": "Do not use math module factorial"}],
+       "testCases": Array.from({length: 10}, (_, i) => {
+          let fac = (n) => n<2?1:(n*fac(n-1));
+          return {"label": `Test ${i+1}`, "testInput": `${i}\n`, "expected": `${fac(i)}`, "hidden": i>1};
+       }),
+       "constraints": [],
+       "hints": ["Base case is n=0 or n=1 return 1."],
+       "solution": "def factorial(n):\n    if n <= 1: return 1\n    return n * factorial(n - 1)\n\nprint(factorial(int(input())))",
+       "solutionExplanation": "A recursive definition of N! = N * (N-1)!"
+    },
+    {
+       "id": "rec-2",
+       "title": "Recursive Fibonacci",
+       "topic": "Recursion",
+       "difficulty": "easy",
+       "description": "Write a recursive function to compute the Nth Fibonacci number (0th is 0, 1st is 1). Print the result.",
+       "starterCode": "def fib(n):\n    pass\n\nprint(fib(int(input())))",
+       "positiveKeywords": [{"word": "fib(", "feedback": "Must call itself"}],
+       "negativeKeywords": [],
+       "testCases": Array.from({length: 10}, (_, i) => {
+          let fib = (n) => n<2?n:(fib(n-1)+fib(n-2));
+          return {"label": `Test ${i+1}`, "testInput": `${i}\n`, "expected": `${fib(i)}`, "hidden": i>1};
+       }),
+       "constraints": [],
+       "hints": ["Base case is n < 2 return n"],
+       "solution": "def fib(n):\n    if n < 2: return n\n    return fib(n-1) + fib(n-2)\n\nprint(fib(int(input())))",
+       "solutionExplanation": "Classic fibonacci recursion."
+    },
+    {
+       "id": "rec-3",
+       "title": "Recursive Digit Sum",
+       "topic": "Recursion",
+       "difficulty": "medium",
+       "description": "Write a recursive function that takes an integer and returns the sum of its digits.",
+       "starterCode": "def digit_sum(n):\n    pass\n\nprint(digit_sum(abs(int(input()))))",
+       "positiveKeywords": [{"word": "digit_sum(", "feedback": "Must call itself"}],
+       "negativeKeywords": [],
+       "testCases": Array.from({length: 10}, (_, i) => {
+          let testVal = i * 123 + 45;
+          let sum = testVal.toString().split('').reduce((a,b)=>a+parseInt(b), 0);
+          return {"label": `Test ${i+1}`, "testInput": `${testVal}\n`, "expected": `${sum}`, "hidden": i>1};
+       }),
+       "constraints": [],
+       "hints": ["n % 10 gives the last digit, n // 10 removes it."],
+       "solution": "def digit_sum(n):\n    if n == 0: return 0\n    return (n % 10) + digit_sum(n // 10)\n\nprint(digit_sum(abs(int(input()))))",
+       "solutionExplanation": "Recursive tearing apart of numbers using modulo and integer division."
+    }
+  ]
+
 };

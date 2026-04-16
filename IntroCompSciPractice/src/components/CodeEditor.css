@@ -31,6 +31,11 @@
   border: none !important;
 }
 
+.code-textarea {
+  caret-color: var(--accent-blue) !important;
+  animation: caretBlink 0s; /* resets native caret */
+}
+
 .code-textarea::selection {
   background: var(--border) !important;
 }
@@ -38,16 +43,16 @@
 /* Prism Overrides for Deep Dark Theme */
 code[class*="language-"], pre[class*="language-"] {
   background: transparent !important;
-  color: #abb2bf !important;
+  color: var(--text-primary) !important;
   text-shadow: none !important;
   font-family: var(--mono) !important;
 }
 
-.token.keyword { color: #c678dd !important; }
-.token.function { color: #61afef !important; }
-.token.string { color: #98c379 !important; }
-.token.number { color: #d19a66 !important; }
-.token.comment { color: #5c6370 !important; font-style: italic; }
-.token.operator, .token.punctuation { color: #abb2bf !important; }
-.token.class-name, .token.builtin { color: #e5c07b !important; }
-.token.boolean { color: #d19a66 !important; }
+.token.keyword { color: var(--accent-purple) !important; }
+.token.function { color: var(--accent-blue) !important; }
+.token.string { color: var(--accent-green) !important; }
+.token.number { color: var(--accent-yellow) !important; }
+.token.comment { color: var(--text-muted) !important; font-style: italic; }
+.token.operator, .token.punctuation { color: var(--text-secondary) !important; }
+.token.class-name, .token.builtin { color: var(--accent-red) !important; }
+.token.boolean { color: var(--accent-yellow) !important; }

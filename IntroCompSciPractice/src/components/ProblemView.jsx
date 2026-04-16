@@ -16,6 +16,15 @@ const CheckIcon = () => (
   </svg>
 );
 
+// Helper to format milliseconds to mm:ss
+const formatTime = (ms) => {
+  if (!ms) return null;
+  const seconds = Math.floor(ms / 1000);
+  const mins = Math.floor(seconds / 60);
+  const secs = seconds % 60;
+  return `${mins}m ${secs.toString().padStart(2, '0')}s`;
+};
+
 const CopyableCode = ({ label, code }) => {
   const [copied, setCopied] = useState(false);
   const handleCopy = () => {
@@ -28,7 +37,7 @@ const CopyableCode = ({ label, code }) => {
     <div className="copyable-block">
       <div className="copyable-header">
         <span className="copyable-label">{label}</span>
-        <button className="copy-btn" onClick={handleCopy} title="Copy to clipboard">
+        <button className={`copy-btn ${copied ? "copied" : ""}`} onClick={handleCopy} title="Copy to clipboard">
           {copied ? <CheckIcon /> : <CopyIcon />}
         </button>
       </div>
@@ -39,11 +48,20 @@ const CopyableCode = ({ label, code }) => {
   );
 };
 
-export default function ProblemView({ problem }) {
+export default function ProblemView({ problem, onSolve, onPrev, onNext, hasPrev, hasNext }) {
   const [code, setCode] = useState("");
   const [activeTab, setActiveTab] = useState("problem"); // problem | hints | solution
   const [results, setResults] = useState(null); // null | { status, cases }
   const [isRunning, setIsRunning] = useState(false);
+  const [isPassed, setIsPassed] = useState(false);
+  const [runningCase, setRunningCase] = useState(0);
+  const [failCount, setFailCount] = useState(0);
+  const [showConfetti, setShowConfetti] = useState(false);
+  const [fontSize, setFontSize] = useState(() => parseInt(localStorage.getItem('pypractice-font-size')) || 13);
+  const [errorLine, setErrorLine] = useState(null);
+  const [revealedHints, setRevealedHints] = useState(0);
+  const [startTime, setStartTime] = useState(null);
+  const [personalBest, setPersonalBest] = useState(null);
   const pyodideRef = useRef(null);
   const pyodideLoadingRef = useRef(null);
   const currentProblemId = useRef(null);
@@ -60,8 +78,42 @@ export default function ProblemView({ problem }) {
       const savedCode = localStorage.getItem(`pypractice-solution-${problem.id}`);
       setCode(savedCode || problem.starterCode);
       currentProblemId.current = problem.id;
+      setRevealedHints(0);
+      setErrorLine(null);
+      setResults(null);
+      setIsPassed(false);
+      
+      // Load personal best time for this problem
+      const savedBest = localStorage.getItem(`pypractice-best-${problem.id}`);
+      setPersonalBest(savedBest ? parseInt(savedBest, 10) : null);
+      
+      // Start timer when problem loads (if not already solved)
+      const isSolved = localStorage.getItem(`pypractice-solved-${problem.id}`);
+      if (!isSolved) {
+        setStartTime(Date.now());
+      } else {
+        setStartTime(null);
+      }
     }
   }, [problem.id, problem.starterCode]);
+
+  // Persist font size
+  useEffect(() => {
+    localStorage.setItem('pypractice-font-size', String(fontSize));
+  }, [fontSize]);
+
+  // Ctrl+Enter keyboard shortcut
+  const runTestsRef = useRef(null);
+  useEffect(() => {
+    const handler = (e) => {
+      if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+        e.preventDefault();
+        if (runTestsRef.current && !runTestsRef.current.isRunning) runTestsRef.current.fn();
+      }
+    };
+    window.addEventListener('keydown', handler);
+    return () => window.removeEventListener('keydown', handler);
+  }, []);
 
   // Save code to localStorage whenever it changes (but only if we have a current problem)
   useEffect(() => {
@@ -85,9 +137,27 @@ export default function ProblemView({ problem }) {
     return pyodideLoadingRef.current;
   };
 
+  const parseErrorLine = (msg) => {
+    const match = msg?.match(/line\s+(\d+)/i);
+    return match ? parseInt(match[1], 10) : null;
+  };
+
+  const handleReset = () => {
+    if (window.confirm("Reset to starter code? Your current solution will be lost.")) {
+      setCode(problem.starterCode);
+      localStorage.removeItem(`pypractice-solution-${problem.id}`);
+      setErrorLine(null);
+      setResults(null);
+    }
+  };
+
   const runTests = async () => {
     setIsRunning(true);
+    setIsPassed(false);
+    setRunningCase(0);
+    setErrorLine(null);
     setResults(null);
+    runTestsRef.current = { fn: runTests, isRunning: true };
 
     let pyodide;
     try {
@@ -98,6 +168,7 @@ export default function ProblemView({ problem }) {
         errorMessage: "Failed to load Python runtime: " + e.message,
         cases: [],
       });
+      setFailCount(c => c + 1);
       setIsRunning(false);
       return;
     }
@@ -106,6 +177,7 @@ export default function ProblemView({ problem }) {
       for (const req of problem.positiveKeywords) {
         if (!code.includes(req.word)) {
           setResults({ status: "error", errorMessage: `Expected keyword missing: '${req.word}'\nReason: ${req.feedback}`, cases: [] });
+          setFailCount(c => c + 1);
           setIsRunning(false); return;
         }
       }
@@ -115,6 +187,7 @@ export default function ProblemView({ problem }) {
       for (const req of problem.negativeKeywords) {
         if (code.includes(req.word)) {
           setResults({ status: "error", errorMessage: `Forbidden keyword used: '${req.word}'\nReason: ${req.feedback}`, cases: [] });
+          setFailCount(c => c + 1);
           setIsRunning(false); return;
         }
       }
@@ -131,6 +204,23 @@ export default function ProblemView({ problem }) {
         // Check if there's explicit testInput, otherwise use input string
         const stdinInput = tc.testInput !== undefined ? tc.testInput : (tc.input || "");
         
+        // File I/O setup: clean current working directory and write input files
+        try {
+          const cwd = pyodide.FS.cwd();
+          const existingFiles = pyodide.FS.readdir(cwd);
+          for (const f of existingFiles) {
+            if (f !== '.' && f !== '..') {
+              try { pyodide.FS.unlink(cwd + '/' + f); } catch(e){}
+            }
+          }
+        } catch(e) {}
+
+        if (tc.files) {
+          for (const [filename, content] of Object.entries(tc.files)) {
+            pyodide.FS.writeFile(filename, String(content));
+          }
+        }
+
         // Capture stdout and override stdin
         const runCode = `
 import sys, io as _io, time as _time
@@ -165,28 +255,43 @@ _printed = _stdout.getvalue()
         // Get printed output
         let output = pyodide.globals.get("_printed") || "";
         let actualRaw = output;
+        let expectedStr = String(tc.expected);
+        let passed = false;
 
-        const expected = String(tc.expected);
-        const actual = String(actualRaw);
-        const passed = actual === expected;
+        // If the test case expects an output file instead of standard output
+        if (tc.expectedFile) {
+          const expectedFilename = tc.expectedFile.name;
+          try {
+            actualRaw = pyodide.FS.readFile(expectedFilename, { encoding: 'utf8' });
+          } catch(e) {
+            actualRaw = "FILE NOT FOUND or read error";
+          }
+          expectedStr = String(tc.expectedFile.content);
+        }
+
+        let actualRawStr = String(actualRaw).replace(/\r\n/g, '\n').trimEnd();
+        let expectedStrNormalized = expectedStr.replace(/\r\n/g, '\n').trimEnd();
+        passed = actualRawStr === expectedStrNormalized;
 
         caseResults.push({
           id: i + 1,
           passed,
           hidden: tc.hidden,
           input: tc.hidden ? "hidden" : tc.input,
-          expected: tc.hidden ? "hidden" : expected,
-          actual,
+          expected: tc.hidden ? "hidden" : expectedStrNormalized,
+          actual: actualRawStr,
           label: tc.label || `Test ${i + 1}`,
         });
 
+        // Stream live results after every test
+        setRunningCase(i + 1);
+        setResults({ status: passed ? "running" : "failed", failedAt: passed ? undefined : i + 1, cases: [...caseResults] });
+
+        // Small stagger so animations are visible even on fast cases
+        await new Promise(r => setTimeout(r, 80));
+
         if (!passed) {
-          // Stop on first failure
-          setResults({
-            status: "failed",
-            failedAt: i + 1,
-            cases: caseResults,
-          });
+          setFailCount(c => c + 1);
           setIsRunning(false);
           return;
         }
@@ -206,6 +311,8 @@ _printed = _stdout.getvalue()
           failedAt: i + 1,
           cases: caseResults,
         });
+        setFailCount(c => c + 1);
+        setErrorLine(parseErrorLine(err.message));
         setIsRunning(false);
         return;
       }
@@ -213,12 +320,30 @@ _printed = _stdout.getvalue()
 
     setResults({ status: "passed", cases: caseResults });
     setIsRunning(false);
+    setIsPassed(true);
+    
+    // Calculate and save personal best time
+    if (startTime) {
+      const timeTaken = Date.now() - startTime;
+      const savedBest = localStorage.getItem(`pypractice-best-${problem.id}`);
+      const currentBest = savedBest ? parseInt(savedBest, 10) : null;
+      
+      if (!currentBest || timeTaken < currentBest) {
+        localStorage.setItem(`pypractice-best-${problem.id}`, String(timeTaken));
+        setPersonalBest(timeTaken);
+      }
+      localStorage.setItem(`pypractice-solved-${problem.id}`, 'true');
+    }
+    
+    if (onSolve) onSolve(problem.id);
+    setShowConfetti(true);
+    setTimeout(() => setShowConfetti(false), 3000);
   };
 
   return (
     <div className="problem-view">
       {/* Left panel: problem description */}
-      <div className="description-panel">
+      <div key={problem.id} className="description-panel" style={{ animation: "problemFade 0.25s ease" }}>
         <div className="tab-bar">
           {["problem", "hints", "solution"].map((tab) => (
             <button
@@ -235,7 +360,7 @@ _printed = _stdout.getvalue()
         </div>
         <div className="tab-content">
           {activeTab === "problem" && (
-            <div className="problem-content" style={{ animation: "fadeSlideIn 0.2s ease" }}>
+            <div className="problem-content" style={{ animation: "slideInTab 0.22s ease" }}>
               <div className="problem-meta">
                 <span className={`difficulty-badge difficulty-${problem.difficulty}`}>
                   {problem.difficulty}
@@ -243,6 +368,11 @@ _printed = _stdout.getvalue()
                 <span className="topic-badge">{problem.topic}</span>
               </div>
               <h1 className="problem-title">{problem.title}</h1>
+              {personalBest && (
+                <div className="personal-best-badge">
+                  ⏱️ Personal best: {formatTime(personalBest)}
+                </div>
+              )}
               <p className="problem-description">{problem.description}</p>
 
               <div className="section-label">Examples</div>
@@ -269,25 +399,50 @@ _printed = _stdout.getvalue()
                   <li key={i}>{c}</li>
                 ))}
               </ul>
+              <div className="im-stuck-row">
+                <button
+                  className="im-stuck-btn"
+                  onClick={() => {
+                    setActiveTab("hints");
+                    if (revealedHints < problem.hints.length) setRevealedHints(r => r + 1);
+                  }}
+                  disabled={revealedHints >= problem.hints.length}
+                >
+                  {revealedHints >= problem.hints.length ? "💡 All Hints Shown" : "💡 I'm Stuck — Get a Hint"}
+                </button>
+              </div>
             </div>
           )}
 
           {activeTab === "hints" && (
-            <div className="hints-content" style={{ animation: "fadeSlideIn 0.2s ease" }}>
-              <div className="section-label">Hints</div>
-              {problem.hints.map((hint, i) => (
-                <details key={i} className="hint-item">
-                  <summary className="hint-summary">
-                    <span className="hint-num">Hint {i + 1}</span>
-                  </summary>
-                  <p className="hint-body">{hint}</p>
-                </details>
-              ))}
+            <div className="hints-content" style={{ animation: "slideInTab 0.22s ease" }}>
+              {revealedHints === 0 ? (
+                <div className="stuck-prompt">
+                  <p>Try the problem first! Reveal hints one at a time when you're stuck.</p>
+                  <button className="reveal-hint-btn" onClick={() => setRevealedHints(1)}>💡 Show First Hint</button>
+                </div>
+              ) : (
+                <>
+                  <div className="section-label">Hints</div>
+                  {problem.hints.slice(0, revealedHints).map((hint, i) => (
+                    <details key={i} className="hint-item">
+                      <summary className="hint-summary"><span className="hint-num">Hint {i + 1}</span></summary>
+                      <p className="hint-body">{hint}</p>
+                    </details>
+                  ))}
+                  {revealedHints < problem.hints.length && (
+                    <button className="reveal-hint-btn" onClick={() => setRevealedHints(r => r + 1)}>
+                      💡 Reveal Hint {revealedHints + 1}
+                    </button>
+                  )}
+                  {revealedHints >= problem.hints.length && <div className="all-hints-shown">✓ All hints revealed</div>}
+                </>
+              )}
             </div>
           )}
 
           {activeTab === "solution" && (
-            <div className="solution-content" style={{ animation: "fadeSlideIn 0.2s ease" }}>
+            <div className="solution-content" style={{ animation: "slideInTab 0.22s ease" }}>
               <div className="solution-warning">
                 ⚠️ Try solving it yourself first!
               </div>
@@ -307,31 +462,60 @@ _printed = _stdout.getvalue()
       {/* Right panel: editor + results */}
       <div className="editor-panel">
         <div className="editor-header">
-          <span className="editor-filename">solution.py</span>
-          <button
-            className={`run-btn ${isRunning ? "running" : ""}`}
-            onClick={runTests}
-            disabled={isRunning}
-          >
-            {isRunning ? (
-              <>
-                <span className="spinner" /> Running…
-              </>
-            ) : (
-              <>▶ Run Tests</>
-            )}
-          </button>
+          <div className="editor-header-left">
+            <button className="editor-tool-btn" onClick={onPrev} disabled={!hasPrev} title="Previous Problem">‹</button>
+            <span className="editor-filename">solution.py</span>
+            <button className="editor-tool-btn" onClick={onNext} disabled={!hasNext} title="Next Problem">›</button>
+          </div>
+          <div className="editor-header-right">
+            <button className="editor-tool-btn" onClick={() => setFontSize(f => Math.max(10, f - 1))} title="Decrease font">A-</button>
+            <span className="font-size-label">{fontSize}</span>
+            <button className="editor-tool-btn" onClick={() => setFontSize(f => Math.min(20, f + 1))} title="Increase font">A+</button>
+            <button className="editor-tool-btn reset-btn" onClick={handleReset} title="Reset to starter code">↺</button>
+            <button
+              className={`run-btn ${isRunning ? "running" : ""} ${isPassed && !isRunning ? "passed" : ""}`}
+              onClick={runTests}
+              disabled={isRunning}
+              title="Run Tests (Ctrl+Enter)"
+            >
+              {isRunning ? (
+                <><span className="spinner" />{runningCase > 0 ? `Testing ${runningCase} / ${problem.testCases.length}…` : "Loading…"}</>
+              ) : (
+                <>▶ Run Tests</>
+              )}
+            </button>
+          </div>
         </div>
         <div className="editor-area">
-          <CodeEditor value={code} onChange={setCode} />
+          <CodeEditor value={code} onChange={setCode} fontSize={fontSize} errorLine={errorLine} />
         </div>
         {(results || isRunning) && (
-          <ResultsPanel 
-            results={results} 
-            isRunning={isRunning} 
-            total={problem.testCases.length} 
-            onClose={() => setResults(null)}
-          />
+          <div
+            key={failCount}
+            style={{ animation: (results?.status === "failed" || results?.status === "error") && !isRunning
+              ? "shake 0.4s ease, slideUp 0.3s ease"
+              : "slideUp 0.3s cubic-bezier(0.22, 1, 0.36, 1)" }}
+          >
+            <ResultsPanel 
+              results={results} 
+              isRunning={isRunning} 
+              total={problem.testCases.length} 
+              onClose={() => setResults(null)}
+            />
+          </div>
+        )}
+
+        {showConfetti && (
+          <div className="confetti-container" ref={el => { if (el) el.inert = true; }}>
+            {Array.from({ length: 60 }).map((_, i) => (
+              <div key={i} className={`confetti-piece shape-${i % 3}`} style={{
+                left: `${Math.random() * 100}%`,
+                animationDelay: `${Math.random() * 0.5}s`,
+                animationDuration: `${1.5 + Math.random() * 1.5}s`,
+                backgroundColor: `hsl(${Math.random() * 360}, 100%, 50%)`
+              }}></div>
+            ))}
+          </div>
         )}
       </div>
     </div>
